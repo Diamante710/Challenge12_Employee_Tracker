@@ -20,10 +20,6 @@ I WANT to be able to view and manage departments, roles, and employees in my com
 SO THAT I can organize and plan my business
 ```
 
-## <a name="Mock-Up"></a>Mock-Up
-
-
-
 ## <a name="Demo"></a>Demo
 
 
