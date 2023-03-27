@@ -29,7 +29,6 @@ function run() {
                 "Add an employee",
                 "Update employee role",
                 "View all managers",
-                "Add manager",
                 "View all roles",
                 "Add role",
                 "View all departments",
@@ -148,7 +147,7 @@ function updateEmployee() {
     ])
         .then(answer => {
             connection.query(
-                'UPDATE employees SET job_id=? WHERE id=?',
+                'UPDATE employees SET role_id=? WHERE id=?',
                 [answer.roleId, answer.id],
                 function (err, res) {
                     if (err) throw err;
