@@ -28,9 +28,9 @@ function run() {
             choices: [
                 "View all employees",
                 "Add an employee",
-                "Update employee role",
+                "Update an employee role",
                 "View all roles",
-                "Add role",
+                "Add a new role",
                 "View all departments",
                 "Add a new department",
                 "Quit"
@@ -45,13 +45,13 @@ function run() {
                 case 'Add an employee':
                     addEmployee();
                     break;
-                case 'Update employee role':
+                case 'Update an employee role':
                     updateEmployee();
                     break;
                 case 'View all roles':
                     viewRoles();
                     break;
-                case 'Add role':
+                case 'Add a new role':
                     addRole();
                     break;
                 case 'View all departments':
