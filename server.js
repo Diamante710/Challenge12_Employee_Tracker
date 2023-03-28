@@ -13,7 +13,8 @@ const connection = mysql.createConnection(
         host: 'localhost',
         user: 'root',
         password: 'Celeste20!6',
-        database: 'employees_db'
+        database: 'employees_db',
+        port: 3306
     },
     console.log(`Connection Successful.`)
 );
@@ -28,11 +29,10 @@ function run() {
                 "View all employees",
                 "Add an employee",
                 "Update employee role",
-                "View all managers",
                 "View all roles",
                 "Add role",
                 "View all departments",
-                "Add department",
+                "Add a new department",
                 "Quit"
             ],
         },
@@ -48,9 +48,6 @@ function run() {
                 case 'Update employee role':
                     updateEmployee();
                     break;
-                case 'View all managers':
-                    viewManagers();
-                    break;
                 case 'View all roles':
                     viewRoles();
                     break;
@@ -60,7 +57,7 @@ function run() {
                 case 'View all departments':
                     viewDepartment();
                     break;
-                case 'Add a department':
+                case 'Add a new department':
                     addDepartment();
                     break;
                 case "Quit":
@@ -77,8 +74,8 @@ function viewEmployees() {
         'SELECT * FROM employees',
         function (err, res) {
             if (err) throw err;
-            console.table(res),
-                run();
+            console.table(res)
+            run();
         })
 };
 
@@ -98,15 +95,38 @@ function addEmployee() {
             name: 'roleId',
             type: 'list',
             message: 'Select role ID for new employee.',
-            choices: [
-                '1 (Sales Manager)',
-                '2 (Sales Team Member)',
-                '3 (Engineering Manager)',
-                '4 (Engineering Team Member)',
-                '5 (Head of Legal Team)',
-                '6 (Legal Team Member)',
-                '7 (Human Resources Lead)',
-                '8 (Lead Acountant)',
+            choices: [{
+                name: '(Sales Manager)',
+                value: 1
+            },
+            {
+                name: '(Sales Team Member)',
+                value: 2
+            },
+            {
+                name: '(Engineering Manager)',
+                value: 3
+            },
+            {
+                name: '(Engineering Team Member)',
+                value: 4
+            },
+            {
+                name: '(Head of Legal Team)',
+                value: 5
+            },
+            {
+                name: '(Legal Team Member)',
+                value: 6
+            },
+            {
+                name: '(Human Resources Lead)',
+                value: 7
+            },
+            {
+                name: '(Lead Acountant)',
+                value: 8
+            },
             ],
         },
         {
@@ -114,20 +134,28 @@ function addEmployee() {
             type: 'list',
             message: 'Select manager ID for new employee.',
             choices: [
-                '1 (James Baxter)',
-                '2 (Sterling Archer)',
-                '3 (Dave Tipper)',
+                {
+                    name: '(James Baxter)',
+                    value: 1
+                },
+                {
+                    name: '(Eliza Thornberry)',
+                    value: 2
+                },
+                {
+                    name: '(Gucci Mane)',
+                    value: 3
+                }
             ],
         },
     ])
         .then(answer => {
             connection.query(
-                'INSERT INTO (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
+                'INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
                 [answer.firstName, answer.lastName, answer.roleId, answer.managerId],
-                function (err, res) {
+                function (err) {
                     if (err) throw err;
-                    console.table(res),
-                        run();
+                        viewEmployees();
                 })
         });
 };
@@ -149,21 +177,10 @@ function updateEmployee() {
             connection.query(
                 'UPDATE employees SET role_id=? WHERE id=?',
                 [answer.roleId, answer.id],
-                function (err, res) {
+                function (err) {
                     if (err) throw err;
-                    console.table(res);
-                    run();
+                    viewEmployees();
                 })
-        })
-};
-
-function viewManagers() {
-    connection.query(
-        'SELECT * FROM managers',
-        function (err, res) {
-            if (err) throw err;
-            console.table(res),
-                run();
         })
 };
 
@@ -189,20 +206,14 @@ function addRole() {
             type: 'input',
             message: 'What is the salary for this job?',
         },
-        {
-            name: 'deptId',
-            type: 'input',
-            message: 'What is the department ID number?',
-        },
     ])
         .then(answer => {
             connection.query(
-                'INSERT INTO roles (title, salary, dept_id) VALUES (?, ?, ?)',
-                [answer.roleId, answer.salary, answer.deptId],
-                function (err, res) {
+                'INSERT INTO roles (title, salary) VALUES (?, ?)',
+                [answer.title, answer.salary],
+                function (err) {
                     if (err) throw err;
-                    console.table(res);
-                    run();
+                    viewRoles();
                 }
             );
         });
@@ -213,7 +224,7 @@ function viewDepartment() {
         'SELECT * FROM departments',
         function (err, res) {
             if (err) throw err;
-            console.table(res),
+            console.table(res)
                 run();
         })
 };
@@ -221,19 +232,18 @@ function viewDepartment() {
 function addDepartment() {
     inquirer.prompt([
         {
-            name: 'deptName',
+            name: 'name',
             type: 'input',
-            message: 'What is the name of the department?',
+            message: 'What is the name of new department?',
         },
     ])
         .then(answer => {
             connection.query(
                 'INSERT INTO departments (dept_name) VALUES (?)',
-                [answer.deptName],
-                function (err, res) {
+                [answer.name],
+                function (err) {
                     if (err) throw err;
-                    console.table(res);
-                    run();
+                    viewDepartment();
                 }
             );
         });
